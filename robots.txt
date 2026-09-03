@@ -1,4 +1,4 @@
-# 大分明野ボーイズ https://www.oct-net.ne.jp/oita-akeno-boys/
+# 大分明野ボーイズ https://oita-akeno-boys.github.io/hp/
 # 検索エンジンのクローラ向けの設定です。
 
 User-agent: *
@@ -10,4 +10,4 @@ Disallow: /data/README.txt
 # data/ の他の txt はページの中身そのものなので、必ず読み取れるようにしておきます
 # （ここを Disallow にすると検索エンジンがページの内容を取得できなくなります）
 
-Sitemap: https://www.oct-net.ne.jp/oita-akeno-boys/sitemap.xml
+Sitemap: https://oita-akeno-boys.github.io/hp/sitemap.xml
