@@ -270,7 +270,9 @@ a {
   transform: translateY(-7px) rotate(-45deg);
 }
 
-@media (max-width: 860px) {
+/* 項目が 8 つになり、横並びでは 1080px 未満で 2 段に折り返すため、
+   ここから下はハンバーガーメニューに切り替える */
+@media (max-width: 1080px) {
   .nav__toggle {
     display: block;
   }
@@ -647,6 +649,218 @@ a {
   margin: 0;
   font-size: 15px;
   font-weight: 500;
+}
+
+/* リンク先を書いた行だけ本文がリンクになる */
+.news__link {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.news__link:hover {
+  text-decoration: underline;
+}
+
+/* ---------- 入団案内 ---------- */
+
+/* 準備中（join.txt の「# 公開」が ON 以外のとき） */
+.prep {
+  background: var(--gray-50);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.prep__title {
+  margin: 0 0 8px;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--navy);
+}
+
+.prep__text {
+  margin: 0;
+  font-size: 14px;
+  color: var(--gray-600);
+}
+
+.joinsec {
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.joinsec__title {
+  margin: 0;
+  padding: 14px 18px;
+  background: var(--navy);
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.joinsec__body {
+  padding: 18px;
+}
+
+.joinsec__p {
+  margin: 0 0 10px;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.joinsec__p:last-child {
+  margin-bottom: 0;
+}
+
+.joinsec__note {
+  margin: 14px 0 0;
+  padding: 10px 14px;
+  background: var(--red-light);
+  border-left: 3px solid var(--red);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--red-dark);
+}
+
+/* 練習体験会の日程 */
+.trial {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.trial__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.trial__row:first-child {
+  border-top: 1px solid var(--gray-200);
+}
+
+.trial__date {
+  flex: 0 0 auto;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--navy);
+  font-variant-numeric: tabular-nums;
+}
+
+.trial__time {
+  flex: 0 0 auto;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.trial__place {
+  flex: 1 1 160px;
+  font-size: 14px;
+  color: var(--gray-600);
+}
+
+.trial__note {
+  flex: 0 0 auto;
+  padding: 2px 8px;
+  background: var(--gray-100);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+/* 問い合わせ先 */
+.contact {
+  margin: 0;
+}
+
+.contact__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 4px 14px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.contact__row:first-child {
+  border-top: 1px solid var(--gray-200);
+}
+
+.contact__label {
+  flex: 0 0 96px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--gray-600);
+}
+
+.contact__value {
+  flex: 1 1 180px;
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.contact__link {
+  color: var(--blue);
+  text-decoration: none;
+}
+
+.contact__link:hover {
+  text-decoration: underline;
+}
+
+/* 申込書 PDF */
+.joindoc {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: var(--navy);
+  border-radius: var(--radius-sm);
+  color: var(--white);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 0.15s;
+}
+
+.joindoc + .joindoc {
+  margin-top: 10px;
+}
+
+.joindoc:hover {
+  background: var(--navy-dark);
+}
+
+.joindoc__ext {
+  padding: 2px 8px;
+  background: var(--red);
+  border-radius: 4px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 600px) {
+  .contact__label {
+    flex: 0 0 100%;
+  }
+
+  .joindoc {
+    display: flex;
+    justify-content: center;
+  }
 }
 
 /* ---------- 試合速報 ---------- */

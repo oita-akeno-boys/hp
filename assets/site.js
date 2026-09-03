@@ -152,7 +152,7 @@
 
   /* =========================================================
      新着情報
-     形式: 日付 | 本文
+     形式: 日付 | 本文 | リンク先（省略可）
      ========================================================= */
 
   function renderNews(target, blocks, limit) {
@@ -172,7 +172,18 @@
     rows.slice(0, limit || rows.length).forEach(function (f) {
       var item = el("li", "news__item");
       item.appendChild(el("time", "news__date", formatDate(f[0] || "")));
-      item.appendChild(el("p", "news__text", f[1] || ""));
+
+      // リンク先が書かれている行だけ本文をリンクにする
+      var text = el("p", "news__text");
+      if (f[2]) {
+        var link = el("a", "news__link", f[1] || "");
+        link.setAttribute("href", f[2]);
+        text.appendChild(link);
+      } else {
+        text.textContent = f[1] || "";
+      }
+      item.appendChild(text);
+
       list.appendChild(item);
     });
 
@@ -723,6 +734,145 @@
   }
 
   /* =========================================================
+     入団案内
+     形式: # 見出し | 種類   種類は 文章 / 日程 / 項目 / PDF
+           先頭の「# 公開 | ON」があるときだけ本文を表示する
+     ========================================================= */
+
+  var JOIN_SWITCH = /^公開/;
+
+  // 書き忘れ・書き間違いのときは伏せる（募集を止めたい側に倒す）
+  function joinIsOpen(blocks) {
+    var value = "";
+    blocks.forEach(function (b) {
+      if (JOIN_SWITCH.test(b.title)) value = b.sub;
+    });
+    return /^(ON|公開)$/i.test(value);
+  }
+
+  function joinParagraphs(box, rows) {
+    rows.forEach(function (f) {
+      box.appendChild(el("p", "joinsec__p", f.join(" | ")));
+    });
+  }
+
+  function joinSchedule(box, rows) {
+    var list = el("ul", "trial");
+
+    rows.forEach(function (f) {
+      var item = el("li", "trial__row");
+      item.appendChild(el("span", "trial__date", formatDate(f[0] || "")));
+      if (f[1]) item.appendChild(el("span", "trial__time", f[1]));
+      if (f[2]) item.appendChild(el("span", "trial__place", f[2]));
+      if (f[3]) item.appendChild(el("span", "trial__note", f[3]));
+      list.appendChild(item);
+    });
+
+    box.appendChild(list);
+  }
+
+  // スマホからそのまま発信・送信できるようにする
+  function contactHref(v) {
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)) return "mailto:" + v;
+    if (/^[0-9][0-9\-()\s]{8,}$/.test(v)) return "tel:" + v.replace(/[^0-9+]/g, "");
+    return "";
+  }
+
+  function joinContact(box, rows) {
+    var list = el("dl", "contact");
+
+    rows.forEach(function (f) {
+      var value = f[1] || "";
+      var href = contactHref(value);
+      var row = el("div", "contact__row");
+
+      row.appendChild(el("dt", "contact__label", f[0] || ""));
+
+      var dd = el("dd", "contact__value");
+      if (href) {
+        var link = el("a", "contact__link", value);
+        link.setAttribute("href", href);
+        dd.appendChild(link);
+      } else {
+        dd.textContent = value;
+      }
+      row.appendChild(dd);
+
+      list.appendChild(row);
+    });
+
+    box.appendChild(list);
+  }
+
+  function joinDocs(box, rows) {
+    var count = 0;
+
+    rows.forEach(function (f) {
+      var href = f[1] || "";
+      // 置き場所が空の書類は、まだ用意できていないものとして出さない
+      if (!href) return;
+
+      var link = el("a", "joindoc", f[0] || "");
+      link.setAttribute("href", href);
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.appendChild(el("span", "joindoc__ext", "PDF"));
+      box.appendChild(link);
+      count++;
+    });
+
+    if (!count) box.appendChild(el("p", "empty", "書類は準備中です。"));
+  }
+
+  function renderJoin(target, blocks) {
+    if (!joinIsOpen(blocks)) {
+      var prep = el("div", "prep");
+      prep.appendChild(el("p", "prep__title", "ただいま準備中です"));
+      prep.appendChild(
+        el("p", "prep__text", "入団案内は準備中です。公開までしばらくお待ちください。")
+      );
+      target.appendChild(prep);
+      return;
+    }
+
+    var count = 0;
+
+    blocks.forEach(function (b) {
+      if (JOIN_SWITCH.test(b.title)) return;
+      if (!b.rows.length && !b.notes.length) return;
+
+      var sec = el("section", "joinsec");
+      if (b.title) sec.appendChild(el("h2", "joinsec__title", b.title));
+
+      var box = el("div", "joinsec__body");
+
+      switch ((b.sub || "").toUpperCase()) {
+        case "日程":
+          joinSchedule(box, b.rows);
+          break;
+        case "項目":
+          joinContact(box, b.rows);
+          break;
+        case "PDF":
+          joinDocs(box, b.rows);
+          break;
+        default:
+          joinParagraphs(box, b.rows);
+      }
+
+      b.notes.forEach(function (n) {
+        box.appendChild(el("p", "joinsec__note", n));
+      });
+
+      sec.appendChild(box);
+      target.appendChild(sec);
+      count++;
+    });
+
+    if (!count) target.appendChild(el("p", "empty", "入団案内はまだ登録されていません。"));
+  }
+
+  /* =========================================================
      ページごとの実行
      ========================================================= */
 
@@ -761,4 +911,6 @@
   if (termBox) renderTermDetail(termBox, queryParam("term"));
 
   render("js-club", "data/club.txt", renderClub);
+
+  render("js-join", "data/join.txt", renderJoin);
 })();
