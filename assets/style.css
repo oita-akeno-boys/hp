@@ -1460,6 +1460,14 @@ a {
   font-weight: 700;
 }
 
+/* 狭い画面では 1 行に入る字数が少なく圧迫感が出るので、本文を少し小さくする */
+@media (max-width: 600px) {
+  .about {
+    font-size: 15px;
+    line-height: 1.85;
+  }
+}
+
 /* ---------- モーション設定を尊重 ---------- */
 
 @media (prefers-reduced-motion: reduce) {

@@ -546,7 +546,7 @@
       name: "卒団生",
       en: "Graduates",
       href: "graduates.html",
-      lead: "大分明野ボーイズを巣立った卒団生の紹介です。その代の主な戦績とあわせて掲載しています。",
+      lead: "大分明野ボーイズを巣立った卒団生の紹介です。氏名・出身中学・出身チームを、顔写真とあわせて掲載しています。",
       about: " の卒団生。氏名・出身中学・出身チームを、顔写真とあわせて掲載しています。"
     }
   ];
@@ -644,11 +644,9 @@
         });
     });
     jobs.push(loadTerm(term));
-    jobs.push(loadAwards());
 
     Promise.all(jobs).then(function (res) {
-      var awards = res[res.length - 1];
-      var roster = res[res.length - 2];
+      var roster = res[res.length - 1];
       var section = null;
       var info = null;
 
@@ -673,14 +671,6 @@
       if (titleBox) titleBox.textContent = heading;
       document.title = heading + " | 大分明野ボーイズ";
       applySection(section, heading, term);
-
-      var award = awards[term];
-      if (award) {
-        var box = el("section", "record");
-        box.appendChild(el("h2", "record__year", award.year));
-        box.appendChild(buildRecordList(award.rows, true));
-        target.appendChild(box);
-      }
 
       if (!roster.length) {
         target.appendChild(el("p", "empty", "名簿は準備中です。"));
