@@ -1665,25 +1665,35 @@ a {
 /* ---------- カレンダー（Googleカレンダー埋め込み） ---------- */
 
 .gcal {
+  /* 見えるカレンダーの高さ */
+  --gcal-h: 600px;
+  /* 埋め込みの下端にある Google のロゴと「＋ Google カレンダー」を隠す分。
+     隠れ方がずれたときは、この数値だけを増減する */
+  --gcal-cut: 32px;
+
   background: var(--white);
   border: 1px solid var(--gray-200);
   border-top: 3px solid var(--blue);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
+  /* --gcal-h を枠線ではなく中身の高さにしたいので border-box を外す */
+  box-sizing: content-box;
+  height: var(--gcal-h);
   overflow: hidden;
 }
 
-/* 埋め込み側は固定幅で来るので、枠側で横幅を持たせる */
+/* 埋め込み側は固定幅で来るので、枠側で横幅を持たせる。
+   高さは枠より下端の分だけ大きくし、はみ出した部分を枠で切り落としている */
 .gcal__frame {
   display: block;
   width: 100%;
-  height: 600px;
+  height: calc(var(--gcal-h) + var(--gcal-cut));
   border: 0;
 }
 
 @media (max-width: 600px) {
-  .gcal__frame {
-    height: 520px;
+  .gcal {
+    --gcal-h: 520px;
   }
 }
 
